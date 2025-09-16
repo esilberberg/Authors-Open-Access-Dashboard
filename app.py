@@ -4,16 +4,25 @@ from build_articles_oa_overview import build_articles_oa_overview
 
 st.set_page_config(page_title="Open Access Dashboard", page_icon=":unlock:", layout="centered", initial_sidebar_state="expanded")
 with st.sidebar:
-    st.header(":books: About")
-    st.markdown("The Open Access Dashboard retrieves a list of your scholarly publications and analyzes their open access (OA) status. For each publication with a DOI, it tells you whether the article is currently open access or provides options for making closed-access publications open. All data is sourced from ORCID, Unpaywall, and the JISC Open Policy Finder.")
     st.header(":mag_right: Glossary")
     st.markdown('''
-    - **Published Version**: The final, typeset article as it appears in the journal, with the official publication date.  
-    - **Accepted Version**: The final manuscript after peer review, but before the journal has formatted it for publication. Usually a Word document.
-    - **Submitted Versions**: The first draft of an article, also called a preprint, that an author submits to a journal for review. Usually a Word document.
+    - **Published Version**: The final, typeset pdf as it appears in the journal.
+    - **Accepted Version**: After peer review, but before the journal has formatted it for publication. Usually a Word document.
+    - **Submitted Versions**: Also called a preprint, the draft an author initially submits to a journal. Usually a Word document.
     ''')
+    with st.expander(":books: **Get Started**"):
+        st.markdown("""
+        The Open Access Dashboard retrieves a list of your publications and determines their open access (OA) status. For publications that are :warning: **Closed Access**, we provide several pathways to make them open. 
+        
+        Each pathway has its own rules. For example, you might pay a fee to immediately make the final, **Published Version** of your article OA. 
+        
+        Alternatively, you might make the **Accepted Version** of your article (the version after peer review but before the publisher's final formatting) available in a repository like [CUNY Academic Works](https://academicworks.cuny.edu/). This option is often free but may require you to wait for a specific time period, known as an **embargo**.
+        """)
+    with st.expander(":bar_chart: **Data Sources**"):
+        st.markdown("This dashboard uses data from ORCID, Unpaywall, and the JISC Open Policy Finder. For your publications to be processed, they must be on your ORCID record and include a DOI.")
+    
 st.title(":unlock: Open Access Dashboard")
-orcid_input = st.text_input("Enter your ORCID:")
+orcid_input = st.text_input("ORCID:")
 
 
 if orcid_input:
@@ -31,18 +40,23 @@ if orcid_input:
         data = build_articles_oa_overview(orcid_input, jisc_api_key)
 
     if not data.empty:
-        st.header(f"{data.iloc[0]['Author']}'s Publications")
+        st.header(f"{data.iloc[0]['Author']}")
         
         oa_status_options = ["All", "Open Access", "Closed Access"]
         oa_status_selection = st.segmented_control(
         "View publications by open access status:", oa_status_options, selection_mode="single", default="All")
+        number_of_publications = len(data)
         if oa_status_selection == "Open Access":
             data = data[data['OA Status'] == True]
+            number_of_publications = len(data)
         elif oa_status_selection == "Closed Access":
             data = data[data['OA Status'] == False]
+            number_of_publications = len(data)
         
-        #Blank space
-        st.markdown('####')
+        st.markdown(f"### {number_of_publications} Publication{'s' if number_of_publications != 1 else ''}")
+       
+        # Blank space
+        st.markdown('#####')
         
         for index, row in data.iterrows():
             # A container for each publications
