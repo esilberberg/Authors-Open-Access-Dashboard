@@ -9,6 +9,7 @@ import requests
 import json
 import pandas as pd
 import streamlit as st
+import certifi
 
 def build_articles_oa_overview(orcid, jisc_api_key):
     """
@@ -100,13 +101,17 @@ def build_articles_oa_overview(orcid, jisc_api_key):
             return None
 
     def get_jisc_data(issn, jisc_api_key):
+        """
+        Retrieves journal permissions from the JISC Open Policy Finder.
+        """
         api_endpoint = f'https://v2.sherpa.ac.uk/cgi/retrieve_by_id?item-type=publication&api-key={jisc_api_key}&format=Json&identifier={issn}'
         try:
-            response = requests.get(api_endpoint)
+            # Add the verify parameter to use certifi's certificate bundle
+            response = requests.get(api_endpoint, verify=certifi.where())
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            print(f"Error making API request: {e}")
+            print(f"Error making API request: {e}") 
             return None
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON response: {e}")
