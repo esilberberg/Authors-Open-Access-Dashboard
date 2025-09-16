@@ -1,8 +1,7 @@
 # The Open Access Dashboard
 
-<p align="center">
+<p>
 <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Badge">
-<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge">
 </p>
 
 ## Overview
