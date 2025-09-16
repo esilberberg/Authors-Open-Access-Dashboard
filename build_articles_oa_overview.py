@@ -106,7 +106,8 @@ def build_articles_oa_overview(orcid, jisc_api_key):
     def get_jisc_data(issn, jisc_api_key):
         api_endpoint = f'https://v2.sherpa.ac.uk/cgi/retrieve_by_id?item-type=publication&api-key={jisc_api_key}&format=Json&identifier={issn}'
         try:
-            response = requests.get(api_endpoint)
+            # Add the 'verify=False' parameter to skip SSL certificate verification
+            response = requests.get(api_endpoint, verify=False)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
