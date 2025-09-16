@@ -1,9 +1,5 @@
 # The Open Access Dashboard
 
-<p>
-<img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Badge">
-</p>
-
 ## Overview
 The Open Access Dashboard is a Streamlit web app that helps researchers understand the open access (OA) status of their publications.
 
@@ -18,11 +14,13 @@ The core of this project is a Python script, `build_articles_oa_overview.py`, wh
 - **Generates a Report:** All collected data is compiled into a pandas DataFrame, providing a clear and structured overview.
 
 ## Dependencies
-- Python libraries
-    - streamlit
-    - pandas
-    - requests
-- JISC Open Policy Finder API key as a Streamlit secret in `.streamlit/secrets.toml`
+<p>
+<img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Badge">
+</p>
+<p>
+<img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas Badge">
+</p>
+JISC Open Policy Finder API key as a Streamlit secret in `.streamlit/secrets.toml`
 
 ## Limitations
 Articles without a valid DOI cannot be checked for OA status or journal policies. The accuracy of the output is dependent on the data provided by ORCID, Unpaywall, and JISC Open Policy Finder.
