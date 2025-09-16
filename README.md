@@ -16,8 +16,6 @@ The core of this project is a Python script, `build_articles_oa_overview.py`, wh
 ## Dependencies
 <p>
 <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Badge">
-</p>
-<p>
 <img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas Badge">
 </p>
 JISC Open Policy Finder API key as a Streamlit secret in `.streamlit/secrets.toml`
