@@ -34,6 +34,7 @@ if orcid_input:
 
     # Get the JISC API key from secrets
     jisc_api_key = st.secrets["api-jisc"]
+    st.write(f"API Key loaded (first 5 chars): {jisc_api_key[:5]}...")
 
     # Spinner to show while fetching data
     with st.spinner('Loading...'):
