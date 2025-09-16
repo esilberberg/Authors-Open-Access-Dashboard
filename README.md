@@ -18,7 +18,8 @@ The core of this project is a Python script, `build_articles_oa_overview.py`, wh
 <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Badge">
 <img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas Badge">
 </p>
-JISC Open Policy Finder API key as a Streamlit secret in `.streamlit/secrets.toml`
+
+You'll also need to configure your **JISC Open Policy Finder API key** as a Streamlit secret in a `.streamlit/secrets.toml` file
 
 ## Limitations
 Articles without a valid DOI cannot be checked for OA status or journal policies. The accuracy of the output is dependent on the data provided by ORCID, Unpaywall, and JISC Open Policy Finder.
