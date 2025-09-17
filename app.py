@@ -1,6 +1,9 @@
 import streamlit as st
 import re
 from build_articles_oa_overview import build_articles_oa_overview
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 st.set_page_config(page_title="Open Access Dashboard", page_icon=":unlock:", layout="centered", initial_sidebar_state="expanded")
 with st.sidebar:
