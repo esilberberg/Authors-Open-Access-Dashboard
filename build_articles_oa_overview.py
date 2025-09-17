@@ -9,10 +9,6 @@ import requests
 import json
 import pandas as pd
 import streamlit as st
-import certifi
-import os
-
-os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 
 def build_articles_oa_overview(orcid, jisc_api_key):
     """

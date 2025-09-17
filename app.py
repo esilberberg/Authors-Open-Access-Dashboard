@@ -24,7 +24,6 @@ with st.sidebar:
 st.title(":unlock: Open Access Dashboard")
 orcid_input = st.text_input("ORCID:")
 
-
 if orcid_input:
     # ORCID validation
     orcid_pattern = r'^[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}$'
