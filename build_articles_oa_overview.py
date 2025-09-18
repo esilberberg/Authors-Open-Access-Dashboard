@@ -104,6 +104,7 @@ def build_articles_oa_overview(orcid, jisc_api_key):
         try:
             response = requests.get(api_endpoint)
             response.raise_for_status()
+            print(response)
             return response.json()
         except requests.exceptions.RequestException as e:
             print(f"Error making API request: {e}")

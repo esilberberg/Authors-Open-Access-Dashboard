@@ -83,7 +83,6 @@ if orcid_input:
                 # # Display journal permissions inside the container
                 journal_permissions = row['Journal Permissions']
                 journal_permissions.reverse()
-                st.markdown(journal_permissions)
 
                 if row['OA Status'] is False:  
                     if journal_permissions:
