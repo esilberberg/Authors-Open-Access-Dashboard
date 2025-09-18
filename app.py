@@ -33,7 +33,6 @@ if orcid_input:
 
     # Get the JISC API key from secrets
     jisc_api_key = st.secrets["api-jisc"]
-    st.markdown(jisc_api_key[0:5])
 
     # Spinner to show while fetching data
     with st.spinner('Loading...'):
@@ -84,6 +83,7 @@ if orcid_input:
                 # # Display journal permissions inside the container
                 journal_permissions = row['Journal Permissions']
                 journal_permissions.reverse()
+                st.markdown(journal_permissions)
 
                 if row['OA Status'] is False:  
                     if journal_permissions:
