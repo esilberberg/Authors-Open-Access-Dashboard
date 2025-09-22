@@ -1,16 +1,68 @@
 import streamlit as st
+import pandas as pd
 import re
 from build_articles_oa_overview import build_articles_oa_overview
+
+def get_composite_permissions(permissions_list):
+    """
+    Groups permissions by version and creates a composite view for each.
+    
+    Returns a dictionary where keys are version names and values are
+    composite details.
+    """
+    composite_data = {}
+
+    for perm in permissions_list:
+        version = perm['version']
+
+        if version not in composite_data:
+            composite_data[version] = {
+                'oa_fee_required': False,
+                'longest_embargo': 0,
+                'deposit_locations': set(),
+                'named_repositories': set()
+            }
+
+        # Check for OA fee
+        if perm['additional_oa_fee'] == 'Yes':
+            composite_data[version]['oa_fee_required'] = True
+        
+        # Find the longest embargo period
+        embargo_str = perm['embargo_period']
+        if embargo_str != 'None':
+            months = int(embargo_str.split()[0])
+            if months > composite_data[version]['longest_embargo']:
+                composite_data[version]['longest_embargo'] = months
+
+        # Collect unique deposit locations and named repositories
+        if perm['deposit_locations'] != 'None':
+            # Split the string and add each location individually to the set
+            locations = [loc.strip() for loc in perm['deposit_locations'].split(',')]
+            for loc in locations:
+                if loc:  # Ensure no empty strings are added
+                    composite_data[version]['deposit_locations'].add(loc)
+                    
+        if perm['named_repositories'] != 'None':
+            composite_data[version]['named_repositories'].add(perm['named_repositories'])
+
+    return composite_data
 
 st.set_page_config(page_title="Open Access Dashboard", page_icon=":unlock:", layout="centered", initial_sidebar_state="expanded")
 with st.sidebar:
     st.header(":mag_right: Glossary")
     st.markdown('''
-    - **Published Version**: The final, typeset pdf as it appears in the journal.
-    - **Accepted Version**: After peer review, but before the journal has formatted it for publication. Usually a Word document.
-    - **Submitted Versions**: Also called a preprint, the draft an author initially submits to a journal. Usually a Word document.
+    - **Published Version**: The final, typeset PDF as it appears in the journal.
+    - **Accepted Version**: Peer-reviewed and accepted by a journal, but not yet typeset for publication.
+    - **Preprint**: The draft you initially submit to a journal. 
     ''')
-    with st.expander(":books: **Get Started**"):
+
+    st.divider()
+    st.markdown('Make your work freely available on: [CUNY Academic Works](https://academicworks.cuny.edu/)')
+    st.image("media/caw-logo.png", width="stretch")
+
+
+    st.divider()    
+    with st.expander(":books: **About**"):
         st.markdown("""
         The Open Access Dashboard retrieves a list of your publications and determines their open access (OA) status. For publications that are :warning: **Closed Access**, we provide several pathways to make them open. 
         
@@ -80,52 +132,58 @@ if orcid_input:
                 ''' 
                 st.markdown(multi)
 
-                # # Display journal permissions inside the container
+                # Manage Journal OA permissions/policies
                 journal_permissions = row['Journal Permissions']
-                journal_permissions.reverse()
 
-                if row['OA Status'] is False:  
+                if row['OA Status'] is False:
                     if journal_permissions:
                         st.markdown("**How to Make This Open Access:**")
-                        for perm in journal_permissions:
-                            
-                            #Logic for oa options panels
-                            if perm['additional_oa_fee'] =='Yes':
-                                oa_fee_txt = "A fee is required."
-                            else:
-                                oa_fee_txt = "No fee required."
-                            
-                            if perm['embargo_period'] == 'None':
-                                embargo_txt = "You can make it open access immediately."
-                            else:
-                                embargo_txt = f"You can make it open access after an embargo period of {perm['embargo_period']}."
+                        
+                        composite_perms = get_composite_permissions(journal_permissions)
+                        
+                        # Set order of the expanders
+                        version_order = ['Submitted', 'Accepted', 'Published']
 
-                            if perm['deposit_locations'] != 'None':
-                                location_txt = f"**Where you can deposit it:** {perm['deposit_locations']}."
-                            else: 
-                                location_txt = 'No specific deposit locations mentioned.'
-
-                            if perm['named_repositories'] != 'None':
-                                named_repo_txt = f"**Permitted repositories:** {perm['named_repositories']}."
-                            else:
-                                named_repo_txt = ''
-                            
-                            with st.expander(f"**{perm['version']} Version**"):
+                        for version_type in version_order:
+                            if version_type in composite_perms:
+                                composite = composite_perms[version_type]
                                 
-                                details = []
-                                details.append(f"- **Cost:** {oa_fee_txt}")
-                                details.append(f"- **Embargo:** {embargo_txt}")
-                                if location_txt and location_txt != 'No specific deposit locations mentioned.':
-                                    details.append(f"- {location_txt}")
-                                if named_repo_txt:
-                                    details.append(f"- {named_repo_txt}")
-                            
-                                final_text = "\n".join(details)
-                                st.write(final_text)
+                                # Set the expander names
+                                expander_title = f"**{version_type} Version**"
+                                if version_type == "Submitted":
+                                    expander_title = "**Preprint**"
+
+                                with st.expander(expander_title):
+                                    details = []
+                                    
+                                    # OA fee logic
+                                    oa_fee_txt = "A fee is required." if composite['oa_fee_required'] else "No fee required."
+                                    details.append(f"- **Cost:** {oa_fee_txt}")
+
+                                    # Embargo period logic
+                                    if composite['longest_embargo'] > 0:
+                                        embargo_txt = f"You can make it open access after an embargo period of {composite['longest_embargo']} months."
+                                    else:
+                                        embargo_txt = "You can make it open access immediately."
+                                    details.append(f"- **Embargo:** {embargo_txt}")
+                                    
+                                    # Deposit locations
+                                    if composite['deposit_locations']:
+                                        location_txt = ", ".join(composite['deposit_locations'])
+                                        details.append(f"- **Where you can deposit it:** {location_txt}.")
+                                    
+                                    # Named repositories
+                                    if composite['named_repositories']:
+                                        named_repo_txt = ", ".join(composite['named_repositories'])
+                                        details.append(f"- **Permitted repositories:** {named_repo_txt}.")
+
+                                    final_text = "\n".join(details)
+                                    st.write(final_text)
+
                     else:
                         st.markdown("*No open access options found.*")
                 else:
                     st.markdown("")
-                    
+
     else:
         st.error("*No publications found for the provided ORCID.*")
