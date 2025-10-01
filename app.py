@@ -78,7 +78,7 @@ with st.sidebar:
         st.markdown("This dashboard uses data from ORCID, Unpaywall, and the JISC Open Policy Finder. For your publications to be processed, they must be on your ORCID record and include a DOI.")
     
 st.title(":unlock: Open Access Dashboard")
-orcid_input = st.text_input("ORCID:")
+orcid_input = st.text_input("Input your ORCID:")
 
 if orcid_input:
     # ORCID validation
