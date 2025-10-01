@@ -53,7 +53,7 @@ with st.sidebar:
     st.markdown('''
     - **Published Version**: The final, typeset PDF as it appears in the journal.
     - **Accepted Version**: Peer-reviewed and accepted by a journal, but not yet typeset for publication.
-    - **Submitted**: The draft you initially submit to a journal. 
+    - **Submitted Version**: The draft you initially submit to a journal. 
     ''')
 
     st.divider()
