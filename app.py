@@ -53,11 +53,15 @@ with st.sidebar:
     st.markdown('''
     - **Published Version**: The final, typeset PDF as it appears in the journal.
     - **Accepted Version**: Peer-reviewed and accepted by a journal, but not yet typeset for publication.
-    - **Preprint**: The draft you initially submit to a journal. 
+    - **Submitted**: The draft you initially submit to a journal. 
     ''')
 
     st.divider()
-    st.markdown('Make your work freely available on: [CUNY Academic Works](https://academicworks.cuny.edu/)')
+    st.markdown('''
+    ### :zap: Maximize Your Impact!
+    
+    Once you find an OA pathway for your work (e.g., **Accepted Version**), **upload it to [CUNY Academic Works](https://academicworks.cuny.edu/)** to promote wider readership.
+    ''')
     st.image("media/caw-logo.png", width="stretch")
 
 
@@ -151,7 +155,7 @@ if orcid_input:
                                 # Set the expander names
                                 expander_title = f"**{version_type} Version**"
                                 if version_type == "Submitted":
-                                    expander_title = "**Preprint**"
+                                    expander_title = "**Submitted**"
 
                                 with st.expander(expander_title):
                                     details = []
